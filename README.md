@@ -42,6 +42,8 @@ class MyWorker extends Worker
             echo 'Got any_event event from my master: ' . $data; // data == Hello my worker
             // Still we can send any event back to master
             $this->event('hello_master');
+            $this->event('send-any-data', new Data()); // you can send any object, array or scalar
+            // object should have jms serializer metadata to be serialized
         });
     }
 }
