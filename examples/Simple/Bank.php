@@ -9,7 +9,7 @@ class Bank extends Application
 {
     public function run()
     {
-        $this->loop()->addPeriodicTimer(0.5, function() {
+        $this->loop()->addPeriodicTimer(1.5, function() {
             $this->emit('transaction', new Transaction(
                 ['usd', 'eur'][rand(0, 1)],
                 rand(10, 250)
