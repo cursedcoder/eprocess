@@ -30,6 +30,7 @@ Example explains features
 
 ```php
 use EProcess\Application\Application;
+use EProcess\Application\ApplicationFactory;
 
 class Data
 {
@@ -63,6 +64,8 @@ class MyWorker extends Application
         });
     }
 }
+
+ApplicationFactory::launch(Main::class);
 ```
 
 You need to have proper autoloading established in order to use this example.
