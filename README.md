@@ -18,8 +18,8 @@ Features
 * integration with frameworks, see `EProcess\Application\ContainerApplication` for Symfony
 * child workers can have own child workers (i.e. `main -> worker -> worker ...`)
 
-Example explain features
-========================
+Example explains features
+=========================
 
 ```php
 use EProcess\Application\Application;
