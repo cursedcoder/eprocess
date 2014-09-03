@@ -20,10 +20,10 @@ Features
 
 Install&try
 ===========
-* git clone https://github.com/cursedcoder/eprocess
-* cd eprocess
-* composer install
-* php examples/simple.php
+* `git clone https://github.com/cursedcoder/eprocess`
+* `cd eprocess`
+* `composer install`
+* `php examples/simple.php`
 
 Example explains features
 =========================
