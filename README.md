@@ -20,7 +20,7 @@ Example explain features
 ========================
 
 ```php
-use EProcess\Worker;
+use EProcess\Application\Application;
 
 class Data
 {
@@ -29,7 +29,7 @@ class Data
   // setters getters etc.
 }
 
-class Main extends Worker // like that one in c++
+class Main extends Application // like that one in c++
 {
     public function run()
     {
@@ -41,7 +41,7 @@ class Main extends Worker // like that one in c++
     }
 }
 
-class MyWorker extends Worker
+class MyWorker extends Application
 {
     public function run()
     {
