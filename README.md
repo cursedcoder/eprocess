@@ -18,6 +18,13 @@ Features
 * integration with frameworks, see `EProcess\Application\ContainerApplication` for Symfony
 * child workers can have own child workers (i.e. `main -> worker -> worker ...`)
 
+Install&try
+===========
+* git clone https://github.com/cursedcoder/eprocess
+* cd eprocess
+* composer install
+* php examples/simple.php
+
 Example explains features
 =========================
 
