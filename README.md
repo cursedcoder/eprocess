@@ -29,7 +29,7 @@ class Data
   // setters getters etc.
 }
 
-class Main // like that one in c++
+class Main extends Worker // like that one in c++
 {
     public function run()
     {
