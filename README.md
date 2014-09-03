@@ -15,6 +15,7 @@ Features
 * inter-process communication between childs-parent using unix sockets
 * simple serialization for objects(jms serializer), arrays, scalars
 * async events driven flow (react eventloop)
+* integration with a frameworks, see `EProcess\Application\ContainerApplication` for Symfony
 
 Example explain features
 ========================
