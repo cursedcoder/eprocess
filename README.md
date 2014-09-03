@@ -9,6 +9,13 @@ Check out examples in `examples/` dir.
 
 No tests – no problems.
 
+Features
+========
+* 3 adapters: child process (react), pthreads, symfony process (not tested)
+* inter-process communication between childs-parent using unix sockets
+* simple serialization for objects(jms serializer), arrays, scalars
+* async events driven flow (react eventloop)
+
 Example explain features
 ========================
 
