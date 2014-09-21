@@ -58,6 +58,10 @@ PHP;
         $node = uniqid('thread_');
         $unix = sprintf('unix://app/cache/%s.sock', $node);
 
+        register_shutdown_function(function() use ($unix) {
+            unlink($unix);
+        });
+
         $messenger = MessengerFactory::server($unix, $this->loop);
 
         $script = sprintf($this->script, EPROCESS_AUTOLOAD, $unix, $class, base64_encode($this->serialize($data)));

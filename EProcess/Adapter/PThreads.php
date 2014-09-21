@@ -20,6 +20,10 @@ class PThreads
         $node = uniqid('thread_');
         $unix = sprintf('unix://tmp/%s.sock', $node);
 
+        register_shutdown_function(function() use ($unix) {
+            unlink($unix);
+        });
+
         $messenger = MessengerFactory::server($unix, $this->loop);
 
         $this->process = new Thread($unix, $class, $data);
