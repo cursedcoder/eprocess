@@ -4,10 +4,9 @@ namespace EProcess\Adapter;
 
 use EProcess\Behaviour\UniversalSerializer;
 use Symfony\Component\Process\PhpProcess;
-use React\EventLoop\LoopInterface;
 use EProcess\MessengerFactory;
 
-class SymfonyProcess
+class SymfonyProcess extends BaseAdapter
 {
     use UniversalSerializer;
 
@@ -48,20 +47,9 @@ PHP;
     private $loop;
     private $process;
 
-    public function __construct(LoopInterface $loop)
-    {
-        $this->loop = $loop;
-    }
-
     public function create($class, array $data = [])
     {
-        $node = uniqid('thread_');
-        $unix = sprintf('unix://app/cache/%s.sock', $node);
-
-        register_shutdown_function(function() use ($unix) {
-            unlink($unix);
-        });
-
+        $unix = $this->createUnixSocket();
         $messenger = MessengerFactory::server($unix, $this->loop);
 
         $script = sprintf($this->script, EPROCESS_AUTOLOAD, $unix, $class, base64_encode($this->serialize($data)));

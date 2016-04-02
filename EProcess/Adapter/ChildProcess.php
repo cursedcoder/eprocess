@@ -6,10 +6,9 @@ use EProcess\Behaviour\UniversalSerializer;
 use EProcess\MessengerFactory;
 
 use React\ChildProcess\Process;
-use React\EventLoop\LoopInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
 
-class ChildProcess
+class ChildProcess extends BaseAdapter
 {
     use UniversalSerializer;
 
@@ -49,26 +48,19 @@ PHP;
 
     private $loop;
     private $process;
-    private $executableFinder;
-
-    public function __construct(LoopInterface $loop)
-    {
-        $this->loop = $loop;
-        $this->executableFinder = new PhpExecutableFinder();
-    }
 
     public function create($class, array $data = [])
     {
-        if (false === $php = $this->executableFinder->find()) {
+        $executableFinder = new PhpExecutableFinder();
+
+        if (false === $php = $executableFinder->find()) {
             throw new \RuntimeException('Unable to find the PHP executable.');
         }
 
-        $node = uniqid('thread_');
-        $unix = sprintf('unix://tmp/%s.sock', $node);
-
+        $unix = $this->createUnixSocket();
         $messenger = MessengerFactory::server($unix, $this->loop);
 
-        $file = sprintf(__DIR__ . '/../../tmp/%s.php', $node);
+        $file = sprintf(__DIR__ . '/../../tmp/%s.php', $this->node);
 
         file_put_contents($file, sprintf(
             $this->script,
@@ -81,7 +73,7 @@ PHP;
         $this->process = new Process(sprintf('exec %s %s', $php, realpath($file)));
         $this->process->start($this->loop);
 
-        $this->loop->addTimer(5, function() use ($file) {
+        $this->loop->addTimer(3, function() use ($file) {
             unlink($file);
         });
 
@@ -91,10 +83,6 @@ PHP;
 
         $this->process->stderr->on('data', function($data) {
             echo $data;
-        });
-
-        register_shutdown_function(function() use ($unix) {
-            unlink($unix);
         });
 
         return $messenger;

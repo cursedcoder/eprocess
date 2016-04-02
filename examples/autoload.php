@@ -1,5 +1,7 @@
 <?php
 
+declare(ticks = 1);
+
 define('EPROCESS_AUTOLOAD', __FILE__);
 
 $loader = require __DIR__ . '/../vendor/autoload.php';
