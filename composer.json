@@ -2,7 +2,7 @@
     "name": "cursedcoder/eprocess",
     "type": "library",
     "description": "Multi-threading framework?",
-    "keywords": ["pthreads", "child process", "ICP", "non-blocking", "async", "react"],
+    "keywords": ["pthreads", "child process", "IPC", "non-blocking", "async", "react"],
     "homepage": "https://github.com/cursedcoder/eprocess",
     "require": {
         "php": ">=5.5",
