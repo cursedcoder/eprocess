@@ -46,7 +46,6 @@ try {
 }
 PHP;
 
-    private $loop;
     private $process;
 
     public function create($class, array $data = [])
