@@ -75,6 +75,5 @@ You need to have proper autoloading established in order to use this example.
 ToDo
 =======
 
-* Cleanup unix sockets on worker down.
 * Refactor adapters, remove hacks, pass php code directly with stdin instead of file.
 * Can IPC be done without unix sockets or using only single socket?
