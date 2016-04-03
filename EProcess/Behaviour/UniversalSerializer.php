@@ -13,12 +13,15 @@ trait UniversalSerializer
     public function serialize($data)
     {
         $pack = [];
+        $type = gettype($data);
 
         if ($data instanceof ArrayCollection) {
             $data = $data->toArray();
         } elseif (!is_array($data)) {
             $data = [$data];
         }
+
+        $data['type'] = $type;
 
         foreach ($data as $key => $piece) {
             switch (gettype($piece)) {
@@ -47,6 +50,9 @@ trait UniversalSerializer
         $unpack = [];
         $data = is_array($data) ? $data : unserialize($data);
 
+        $type = unserialize($data['type']);
+        unset($data['type']);
+
         foreach ($data as $key => $piece) {
             $piece = unserialize($piece);
 
@@ -70,7 +76,7 @@ trait UniversalSerializer
             }
         }
 
-        return 1 === count($unpack) ? current($unpack) : $unpack;
+        return $type !== 'array' && 1 === count($unpack) ? current($unpack) : $unpack;
     }
 
     public function findSerializer()

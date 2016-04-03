@@ -21,7 +21,8 @@
   },
   "license": "MIT",
   "require-dev": {
-    "divi/pthreads-stub": "dev-master"
+    "divi/pthreads-stub": "dev-master",
+    "phpunit/phpunit": "^5.3"
   },
   "autoload": {
     "psr-4": {
@@ -30,7 +31,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Examples\\": "examples/"
+      "Examples\\": "examples/",
+      "Tests\\": "tests/"
     }
   }
 }
