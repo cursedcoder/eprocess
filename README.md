@@ -1,6 +1,8 @@
 EProcess
 ========
 
+[![Build Status](https://travis-ci.org/cursedcoder/eprocess.svg?branch=master)](https://travis-ci.org/cursedcoder/eprocess)
+
 The idea is to have multiple non-blocking contexts with a transparent inter-process communication out of the box.
 
 This lib is just a PoC, use at your own risk.
