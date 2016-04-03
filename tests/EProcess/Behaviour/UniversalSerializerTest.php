@@ -39,6 +39,18 @@ class UniversalSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertData(new Transaction('EUR', 1235));
     }
 
+    /**
+     * @test
+     */
+    public function should_serialize_all()
+    {
+        $this->assertData([
+            'abcde', // scalar
+            [1 => 'ok'], // array,
+            [2 => ['ok', new Transaction('USD', 555)]] // object
+        ]);
+    }
+
     private function assertData($data)
     {
         $serializer = new SomeSerializer();
