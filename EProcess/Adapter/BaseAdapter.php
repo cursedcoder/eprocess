@@ -31,11 +31,6 @@ abstract class BaseAdapter
         return $unix;
     }
 
-    protected function getNode()
-    {
-        
-    }
-
     abstract public function create($class, array $data = []);
     abstract public function kill();
 }
