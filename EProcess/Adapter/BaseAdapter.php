@@ -17,10 +17,22 @@ abstract class BaseAdapter
 
     protected function createUnixSocket()
     {
-        $unixFile = sprintf('tmp/%s.sock', $this->node);
+        if (!defined('EPROCESS_SOCKET_DIR')) {
+            throw new \Exception("EPROCESS_SOCKET_DIR is not defined.");
+        }
+
+        if (!defined('EPROCESS_AUTOLOAD')) {
+            throw new \Exception('EPROCESS_AUTOLOAD is not defined.');
+        }
+
+        if (!is_writable(EPROCESS_SOCKET_DIR)) {
+            throw new \Exception(sprintf("Cannot write to %s.", EPROCESS_SOCKET_DIR));
+        }
+
+        $unixFile = sprintf('%s/%s.sock', EPROCESS_SOCKET_DIR, $this->node);
         $unix = sprintf('unix://%s', $unixFile);
 
-        $cleanup = function() use ($unixFile) {
+        $cleanup = function () use ($unixFile) {
             $this->loop->stop();
             @unlink($unixFile);
         };
@@ -32,5 +44,6 @@ abstract class BaseAdapter
     }
 
     abstract public function create($class, array $data = []);
+
     abstract public function kill();
 }
