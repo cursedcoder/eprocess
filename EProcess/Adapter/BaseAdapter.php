@@ -2,6 +2,7 @@
 
 namespace EProcess\Adapter;
 
+use Ratchet\Wamp\Exception;
 use React\EventLoop\LoopInterface;
 
 abstract class BaseAdapter
@@ -17,7 +18,15 @@ abstract class BaseAdapter
 
     protected function createUnixSocket()
     {
-        $unixFile = sprintf('tmp/%s.sock', $this->node);
+        if(!defined('SOCKET_PATH'))
+            throw new \Exception("SOCKET_PATH is not defined.");
+        
+        if(!is_writable(SOCKET_PATH)){
+            if(!mkdir(SOCKET_PATH))
+                throw new \Exception("Cannot create folder at SOCKET_PATH.");
+        }
+
+        $unixFile = sprintf('%s/%s.sock', SOCKET_PATH, $this->node);
         $unix = sprintf('unix://%s', $unixFile);
 
         $cleanup = function() use ($unixFile) {

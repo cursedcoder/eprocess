@@ -1,5 +1,7 @@
 <?php
 
+define('SOCKET_PATH', '/tmp/eprocess');
+
 require_once __DIR__ . '/autoload.php';
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
