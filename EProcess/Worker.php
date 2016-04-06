@@ -38,10 +38,6 @@ class Worker
         $this->messenger()->on('initialized', function() {
             $this->initialized = true;
         });
-
-        register_shutdown_function(function() {
-            $this->kill();
-        });
     }
 
     public function kill()
@@ -54,7 +50,12 @@ class Worker
         return $this->messenger;
     }
 
-    public function emit($event, $data)
+    public function adapter()
+    {
+        return $this->adapter;
+    }
+
+    public function emit($event, $data = [])
     {
         if ($this->initialized) {
             $this->messenger->emit($event, $data);

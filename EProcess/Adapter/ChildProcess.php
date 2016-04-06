@@ -72,7 +72,7 @@ PHP;
         $this->process = new Process(sprintf('exec %s %s', $php, realpath($file)));
         $this->process->start($this->loop);
 
-        $this->loop->addTimer(3, function() use ($file) {
+        $this->loop->addTimer(1, function() use ($file) {
             unlink($file);
         });
 

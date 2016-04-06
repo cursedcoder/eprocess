@@ -8,7 +8,16 @@ trait Workable
 {
     public function createWorker($fqcn, array $data = [])
     {
-        return new Worker($this->loop(), $fqcn, extension_loaded('pthreads') ? 'pthreads' : 'child_process', $data);
+        $worker = new Worker(
+            $this->loop(),
+            $fqcn,
+            extension_loaded('pthreads') ? 'pthreads' : 'child_process',
+            $data
+        );
+
+        $this->emitterEmit('worker.created', [$worker]);
+
+        return $worker;
     }
 
     abstract public function loop();

@@ -2,6 +2,7 @@
 
 namespace EProcess\Adapter;
 
+use EProcess\Terminator;
 use React\EventLoop\LoopInterface;
 
 abstract class BaseAdapter
@@ -13,6 +14,11 @@ abstract class BaseAdapter
     {
         $this->loop = $loop;
         $this->node = uniqid('thread_');
+    }
+
+    public function getUnixSocketFile()
+    {
+        return sprintf('%s/%s.sock', EPROCESS_SOCKET_DIR, $this->node);
     }
 
     protected function createUnixSocket()
@@ -29,16 +35,7 @@ abstract class BaseAdapter
             throw new \RuntimeException(sprintf('Cannot write to "%s".', EPROCESS_SOCKET_DIR));
         }
 
-        $unixFile = sprintf('%s/%s.sock', EPROCESS_SOCKET_DIR, $this->node);
-        $unix = sprintf('unix://%s', $unixFile);
-
-        $cleanup = function () use ($unixFile) {
-            $this->loop->stop();
-            @unlink($unixFile);
-        };
-
-        register_shutdown_function($cleanup);
-        pcntl_signal(SIGINT, $cleanup);
+        $unix = sprintf('unix://%s', $this->getUnixSocketFile());
 
         return $unix;
     }

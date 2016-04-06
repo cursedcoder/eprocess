@@ -37,7 +37,7 @@ class Messenger
         }
     }
 
-    public function emit($event, $data)
+    public function emit($event, $data = [])
     {
         $this->connection->send((string) new Message($event, $this->serialize($data)));
     }

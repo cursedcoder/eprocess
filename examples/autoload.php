@@ -1,7 +1,5 @@
 <?php
 
-declare(ticks = 1);
-
 define('EPROCESS_AUTOLOAD', __FILE__);
 define('EPROCESS_SOCKET_DIR', __DIR__ . '/../tmp/');
 
