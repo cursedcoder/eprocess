@@ -9,8 +9,6 @@ This lib is just a PoC, use at your own risk.
 
 Check out examples in `examples/` dir.
 
-No tests – no problems.
-
 Features
 ========
 * 3 adapters: child process (react), pthreads, symfony process (not tested)
