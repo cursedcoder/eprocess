@@ -28,6 +28,10 @@ Install&try
 Example explains features
 =========================
 
+Be aware this snippet below is only for explanatory reasons and will not work out (or at least yet).
+
+For real examples see `exampes/simple.php` and related.
+
 ```php
 use EProcess\Application\Application;
 use EProcess\Application\ApplicationFactory;
