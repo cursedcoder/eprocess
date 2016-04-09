@@ -2,7 +2,6 @@
 
 namespace EProcess\Adapter;
 
-use EProcess\Terminator;
 use React\EventLoop\LoopInterface;
 
 abstract class BaseAdapter

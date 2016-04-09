@@ -59,21 +59,22 @@ PHP;
         $unix = $this->createUnixSocket();
         $messenger = MessengerFactory::server($unix, $this->loop);
 
-        $file = sprintf(__DIR__ . '/../../tmp/%s.php', $this->node);
-
-        file_put_contents($file, sprintf(
+        $script = sprintf(
             $this->script,
             EPROCESS_AUTOLOAD,
             $unix,
             $class,
             base64_encode($this->serialize($data))
-        ));
+        );
 
-        $this->process = new Process(sprintf('exec %s %s', $php, realpath($file)));
-        $this->process->start($this->loop);
+        $this->process = new Process($php);
+        $this->process->start($this->loop, 0.1);
+        
+        $this->process->stdin->resume();
+        $this->process->stdin->write($script);
 
-        $this->loop->addTimer(1, function() use ($file) {
-            unlink($file);
+        $this->process->stdin->on('full-drain', function() {
+            $this->process->stdin->close();
         });
 
         $this->process->stdout->on('data', function($data) {
