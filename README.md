@@ -9,8 +9,6 @@ This lib is just a PoC, use at your own risk.
 
 Check out examples in `examples/` dir.
 
-No tests – no problems.
-
 Features
 ========
 * 3 adapters: child process (react), pthreads, symfony process (not tested)
@@ -29,6 +27,10 @@ Install&try
 
 Example explains features
 =========================
+
+Be aware this snippet below is only for explanatory reasons and will not work out (or at least yet).
+
+For real examples see `exampes/simple.php` and related.
 
 ```php
 use EProcess\Application\Application;
