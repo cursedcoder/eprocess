@@ -4,7 +4,7 @@ namespace EProcess\Adapter;
 
 use EProcess\Behaviour\UniversalSerializer;
 use EProcess\MessengerFactory;
-
+use EProcess\Stream\FullDrainStream;
 use React\ChildProcess\Process;
 use Symfony\Component\Process\PhpExecutableFinder;
 
@@ -69,8 +69,12 @@ PHP;
 
         $this->process = new Process($php);
         $this->process->start($this->loop, 0.1);
-        
-        $this->process->stdin->resume();
+
+        $this->process->stdin = new FullDrainStream(
+            $this->process->stdin->stream,
+            $this->loop
+        );
+
         $this->process->stdin->write($script);
 
         $this->process->stdin->on('full-drain', function() {
