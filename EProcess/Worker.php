@@ -9,12 +9,11 @@ use EProcess\Application\Application;
 use Evenement\EventEmitterTrait;
 use React\EventLoop\LoopInterface;
 use React\EventLoop\Timer\Timer;
+use EMessenger\Message;
 
 class Worker
 {
-    use EventEmitterTrait {
-        EventEmitterTrait::emit as emitterEmit;
-    }
+    use EventEmitterTrait;
 
     private $loop;
     private $adapter;
@@ -32,7 +31,7 @@ class Worker
         $this->messenger = $this->adapter->create($class, $data);
 
         $this->messenger->on('message', function(Message $message) {
-            $this->emitterEmit($message->getEvent(), [$message->getContent()]);
+            $this->emit($message->getEvent(), [$message->getContent()]);
         });
 
         $this->messenger()->on('initialized', function() {
@@ -55,14 +54,14 @@ class Worker
         return $this->adapter;
     }
 
-    public function emit($event, $data = [])
+    public function send($event, $data = [])
     {
         if ($this->initialized) {
-            $this->messenger->emit($event, $data);
+            $this->messenger->send($event, $data);
         } else {
-            $this->loop->addPeriodicTimer(0.1, function(Timer $timer) use ($event, $data) {
+            $this->loop->addPeriodicTimer(0.001, function(Timer $timer) use ($event, $data) {
                 if ($this->initialized) {
-                    $this->messenger->emit($event, $data);
+                    $this->messenger->send($event, $data);
                     $timer->cancel();
                 }
             });

@@ -14,7 +14,7 @@ class Main extends Application
     public function run()
     {
         $this->crawler = $this->createWorker(Crawler::class);
-        $this->crawler->emit('crawl', 'http://google.com/');
+        $this->crawler->send('crawl', 'http://google.com/');
         $this->crawler->on('result', function($data) {
             echo '[Crawler] Got new result: ' . strlen($data) . ' chars' . PHP_EOL;
         });
@@ -31,6 +31,10 @@ class Main extends Application
                 $transaction->getBalance(),
                 $transaction->getCurrency()
             );
+        });
+
+        $this->loop()->addTimer(5, function() {
+            $this->loop()->stop();
         });
     }
 }

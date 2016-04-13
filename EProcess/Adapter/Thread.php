@@ -32,7 +32,7 @@ class Thread extends \Thread
         $application->loop($loop);
         $application->data($this->data);
 
-        $messenger->emit('initialized', true);
+        $messenger->send('initialized', true);
 
         try {
             $application->run();

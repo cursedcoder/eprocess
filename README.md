@@ -48,7 +48,7 @@ class Main extends Application // like that one in c++
     public function run()
     {
         $worker = $this->createWorker(MyWorker::class); // create external non-blocking thread of MyWorker class
-        $worker->emit('any_event', 'Hello my worker!');
+        $worker->send('any_event', 'Hello my worker!');
         $worker->on('hello_master', function() {
             // Receive back-call from child
         });
@@ -62,10 +62,12 @@ class MyWorker extends Application
         $this->on('any_event', function($data) {
             echo 'Got any_event event from my master: ' . $data; // data == Hello my worker
             // Still we can send any event back to master
-            $this->emit('hello_master');
-            $this->emit('send-any-data', new Data()); // you can send any object, array or scalar
+            $this->send('hello_master');
+            $this->send('send-any-data', new Data()); // you can send any object, array or scalar
             // object should have jms serializer metadata to be serialized
         });
+        
+        $this->getSubscribedEvents();
     }
 }
 

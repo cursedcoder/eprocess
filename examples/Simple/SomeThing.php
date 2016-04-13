@@ -9,7 +9,7 @@ class SomeThing extends Application
     public function run()
     {
         $this->loop()->addPeriodicTimer(2.5, function() {
-            $this->emit('status', 'I am here too!');
+            $this->send('status', 'I am here too!');
         });
     }
 }

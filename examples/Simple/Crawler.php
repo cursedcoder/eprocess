@@ -15,7 +15,7 @@ class Crawler extends Application
     {
         $crawl = function() use ($url) {
             $data = file_get_contents($url);
-            $this->emit('result', $data);
+            $this->send('result', $data);
         };
 
         $this->loop()->addPeriodicTimer(5, $crawl);

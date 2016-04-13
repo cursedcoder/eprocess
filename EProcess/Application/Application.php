@@ -2,21 +2,19 @@
 
 namespace EProcess\Application;
 
-use EProcess\Behaviour\UniversalSerializer;
+use EMessenger\Message;
+use EMessenger\Messenger;
 use EProcess\Behaviour\Workable;
-use EProcess\Message;
-use EProcess\Messenger;
 use EProcess\Worker;
 use Evenement\EventEmitterTrait;
 use MKraemer\ReactPCNTL\PCNTL;
 use React\EventLoop\LoopInterface;
+use UniversalSerializer\UniversalSerializerTrait;
 
 abstract class Application
 {
-    use EventEmitterTrait {
-        EventEmitterTrait::emit as emitterEmit;
-    }
-    use UniversalSerializer;
+    use EventEmitterTrait;
+    use UniversalSerializerTrait;
     use Workable;
 
     private $loop;
@@ -33,7 +31,7 @@ abstract class Application
     public function cleanWorkers()
     {
         foreach ($this->workers as $worker) {
-            $worker->emit('shutdown');
+            $worker->send('shutdown');
             unlink($worker->adapter()->getUnixSocketFile());
         }
     }
@@ -60,7 +58,7 @@ abstract class Application
     {
         if ($messenger) {
             $messenger->on('message', function (Message $message) {
-                $this->emitterEmit($message->getEvent(), [$message->getContent()]);
+                $this->emit($message->getEvent(), [$message->getContent()]);
             });
 
             $this->messenger = $messenger;
@@ -78,9 +76,9 @@ abstract class Application
         return $this->data;
     }
 
-    public function emit($event, $data = '')
+    public function send($event, $data = '')
     {
-        $this->messenger->emit($event, $data);
+        $this->messenger->send($event, $data);
     }
 
     abstract public function run();

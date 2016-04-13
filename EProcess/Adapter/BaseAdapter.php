@@ -2,6 +2,7 @@
 
 namespace EProcess\Adapter;
 
+use EMessenger\Transport\UnixTransport;
 use React\EventLoop\LoopInterface;
 
 abstract class BaseAdapter
@@ -20,7 +21,12 @@ abstract class BaseAdapter
         return sprintf('%s/%s.sock', EPROCESS_SOCKET_DIR, $this->node);
     }
 
-    protected function createUnixSocket()
+    public function getUnixSocketAddress()
+    {
+        return sprintf('unix://%s', $this->getUnixSocketFile());
+    }
+
+    protected function createUnixTransport()
     {
         if (!defined('EPROCESS_SOCKET_DIR')) {
             throw new \RuntimeException('EPROCESS_SOCKET_DIR is not defined.');
@@ -34,9 +40,10 @@ abstract class BaseAdapter
             throw new \RuntimeException(sprintf('Cannot write to "%s".', EPROCESS_SOCKET_DIR));
         }
 
-        $unix = sprintf('unix://%s', $this->getUnixSocketFile());
+        echo $this->getUnixSocketFile();
+        echo PHP_EOL;
 
-        return $unix;
+        return new UnixTransport($this->loop, $this->getUnixSocketAddress());
     }
 
     abstract public function create($class, array $data = []);

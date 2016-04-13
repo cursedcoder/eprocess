@@ -15,7 +15,7 @@ trait Workable
             $data
         );
 
-        $this->emitterEmit('worker.created', [$worker]);
+        $this->emit('worker.created', [$worker]);
 
         return $worker;
     }

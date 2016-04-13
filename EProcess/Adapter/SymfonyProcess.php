@@ -2,13 +2,13 @@
 
 namespace EProcess\Adapter;
 
-use EProcess\Behaviour\UniversalSerializer;
 use Symfony\Component\Process\PhpProcess;
-use EProcess\MessengerFactory;
+use EMessenger\MessengerFactory;
+use UniversalSerializer\UniversalSerializerTrait;
 
 class SymfonyProcess extends BaseAdapter
 {
-    use UniversalSerializer;
+    use UniversalSerializerTrait;
 
     private $script = <<<PHP
 <?php
@@ -34,7 +34,7 @@ use React\EventLoop\Factory;
 \$application->loop(\$loop);
 \$application->data(\$application->unserialize(base64_decode('%s')));
 
-\$messenger->emit('initialized', true);
+\$messenger->send('initialized', true);
 
 try {
     \$application->run();
@@ -48,10 +48,15 @@ PHP;
 
     public function create($class, array $data = [])
     {
-        $unix = $this->createUnixSocket();
-        $messenger = MessengerFactory::server($unix, $this->loop);
+        $transport = $this->createUnixTransport();
+        $messenger = MessengerFactory::server($transport);
 
-        $script = sprintf($this->script, EPROCESS_AUTOLOAD, $unix, $class, base64_encode($this->serialize($data)));
+        $script = sprintf(
+            $this->script,
+            EPROCESS_AUTOLOAD,
+            $transport, $class,
+            base64_encode($this->serialize($data))
+        );
 
         $this->process = new PhpProcess($script);
         $this->process->start();

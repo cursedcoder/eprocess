@@ -1,7 +1,7 @@
 <?php
 
 define('EPROCESS_AUTOLOAD', __FILE__);
-define('EPROCESS_SOCKET_DIR', __DIR__ . '/../tmp/');
+define('EPROCESS_SOCKET_DIR', realpath(__DIR__ . '/../tmp'));
 
 $loader = require __DIR__ . '/../vendor/autoload.php';
 

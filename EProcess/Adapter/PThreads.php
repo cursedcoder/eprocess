@@ -2,7 +2,7 @@
 
 namespace EProcess\Adapter;
 
-use EProcess\MessengerFactory;
+use EMessenger\MessengerFactory;
 
 class PThreads extends BaseAdapter
 {
@@ -10,10 +10,10 @@ class PThreads extends BaseAdapter
 
     public function create($class, array $data = [])
     {
-        $unix = $this->createUnixSocket();
-        $messenger = MessengerFactory::server($unix, $this->loop);
+        $transport = $this->createUnixTransport();
+        $messenger = MessengerFactory::server($transport);
 
-        $this->process = new Thread($unix, $class, $data);
+        $this->process = new Thread($transport, $class, $data);
         $this->process->start(PTHREADS_INHERIT_NONE);
 
         return $messenger;

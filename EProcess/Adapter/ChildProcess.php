@@ -2,15 +2,15 @@
 
 namespace EProcess\Adapter;
 
-use EProcess\Behaviour\UniversalSerializer;
-use EProcess\MessengerFactory;
+use UniversalSerializer\UniversalSerializerTrait;
+use EMessenger\MessengerFactory;
 use EProcess\Stream\FullDrainStream;
 use React\ChildProcess\Process;
 use Symfony\Component\Process\PhpExecutableFinder;
 
 class ChildProcess extends BaseAdapter
 {
-    use UniversalSerializer;
+    use UniversalSerializerTrait;
 
     private $script = <<<PHP
 <?php
@@ -19,15 +19,15 @@ require_once '%s';
 
 set_time_limit(0);
 
-use EProcess\MessengerFactory;
+use EMessenger\MessengerFactory;
+use EMessenger\Transport\UnixTransport;
 use EProcess\Application\ApplicationFactory;
 use React\EventLoop\Factory;
 
 \$loop = Factory::create();
 
 \$messenger = MessengerFactory::client(
-    '%s',
-    \$loop
+    new UnixTransport(\$loop, '%s')
 );
 
 \$application = ApplicationFactory::create('%s');
@@ -36,7 +36,7 @@ use React\EventLoop\Factory;
 \$application->loop(\$loop);
 \$application->data(\$application->unserialize(base64_decode('%s')));
 
-\$messenger->emit('initialized', true);
+\$messenger->send('initialized', true);
 
 try {
     \$application->run();
@@ -56,13 +56,13 @@ PHP;
             throw new \RuntimeException('Unable to find the PHP executable.');
         }
 
-        $unix = $this->createUnixSocket();
-        $messenger = MessengerFactory::server($unix, $this->loop);
+        $transport = $this->createUnixTransport();
+        $messenger = MessengerFactory::server($transport);
 
         $script = sprintf(
             $this->script,
             EPROCESS_AUTOLOAD,
-            $unix,
+            $this->getUnixSocketAddress(),
             $class,
             base64_encode($this->serialize($data))
         );
@@ -77,15 +77,15 @@ PHP;
 
         $this->process->stdin->write($script);
 
-        $this->process->stdin->on('full-drain', function() {
+        $this->process->stdin->on('full-drain', function () {
             $this->process->stdin->close();
         });
 
-        $this->process->stdout->on('data', function($data) {
+        $this->process->stdout->on('data', function ($data) {
             echo $data;
         });
 
-        $this->process->stderr->on('data', function($data) {
+        $this->process->stderr->on('data', function ($data) {
             echo $data;
         });
 
