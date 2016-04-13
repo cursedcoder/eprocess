@@ -40,9 +40,6 @@ abstract class BaseAdapter
             throw new \RuntimeException(sprintf('Cannot write to "%s".', EPROCESS_SOCKET_DIR));
         }
 
-        echo $this->getUnixSocketFile();
-        echo PHP_EOL;
-
         return new UnixTransport($this->loop, $this->getUnixSocketAddress());
     }
 
